@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -59,6 +60,9 @@ class OwnerController {
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setDisallowedFields("id", "*.id");
+		// false: an all-whitespace value becomes "", not null, so @NotBlank still reports
+		// it
+		dataBinder.registerCustomEditor(String.class, new StringTrimmerEditor(false));
 	}
 
 	@ModelAttribute("owner")
