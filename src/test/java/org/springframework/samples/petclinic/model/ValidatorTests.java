@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.samples.petclinic.owner.PetType;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import jakarta.validation.ConstraintViolation;
@@ -74,6 +75,49 @@ class ValidatorTests {
 
 		ConstraintViolation<Person> violation = getOnlyViolation(constraintViolations);
 		assertThat(violation.getPropertyPath()).hasToString("lastName");
+		assertThat(violation.getMessage()).isEqualTo("must not be blank");
+	}
+
+	@Test
+	void shouldValidateNameAtMaxLength() {
+		PetType petType = new PetType();
+		petType.setName("a".repeat(80));
+
+		assertThat(createValidator().validate(petType)).isEmpty();
+	}
+
+	@Test
+	void shouldValidateNameJustBelowMaxLength() {
+		PetType petType = new PetType();
+		petType.setName("a".repeat(79));
+
+		assertThat(createValidator().validate(petType)).isEmpty();
+	}
+
+	@Test
+	void shouldNotValidateNameAboveMaxLength() {
+		LocaleContextHolder.setLocale(Locale.ENGLISH);
+
+		PetType petType = new PetType();
+		petType.setName("a".repeat(81));
+
+		Set<ConstraintViolation<PetType>> constraintViolations = createValidator().validate(petType);
+
+		ConstraintViolation<PetType> violation = getOnlyViolation(constraintViolations);
+		assertThat(violation.getPropertyPath()).hasToString("name");
+	}
+
+	@Test
+	void shouldNotValidateBlankName() {
+		LocaleContextHolder.setLocale(Locale.ENGLISH);
+
+		PetType petType = new PetType();
+		petType.setName("");
+
+		Set<ConstraintViolation<PetType>> constraintViolations = createValidator().validate(petType);
+
+		ConstraintViolation<PetType> violation = getOnlyViolation(constraintViolations);
+		assertThat(violation.getPropertyPath()).hasToString("name");
 		assertThat(violation.getMessage()).isEqualTo("must not be blank");
 	}
 
