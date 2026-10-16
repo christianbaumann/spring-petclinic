@@ -191,6 +191,7 @@ class PetController {
 			// Update existing pet's properties
 			existingPet.setName(pet.getName());
 			existingPet.setBirthDate(pet.getBirthDate());
+			existingPet.setMicrochip(pet.getMicrochip());
 			existingPet.setType(pet.getType());
 		}
 		else {
