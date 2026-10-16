@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.samples.petclinic.model.NamedEntity;
+import org.springframework.util.StringUtils;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -49,6 +50,9 @@ public class Pet extends NamedEntity {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate birthDate;
 
+	@Column
+	private String microchip;
+
 	@ManyToOne
 	@JoinColumn(name = "type_id")
 	private PetType type;
@@ -64,6 +68,14 @@ public class Pet extends NamedEntity {
 
 	public LocalDate getBirthDate() {
 		return this.birthDate;
+	}
+
+	public String getMicrochip() {
+		return this.microchip;
+	}
+
+	public void setMicrochip(String microchip) {
+		this.microchip = StringUtils.hasText(microchip) ? microchip.trim() : null;
 	}
 
 	public PetType getType() {
