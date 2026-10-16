@@ -84,6 +84,32 @@ class PetValidatorTests {
 		assertFalse(errors.hasErrors());
 	}
 
+	@Test
+	void validateWithMicrochip() {
+		petType.setName(petTypeName);
+		pet.setName(petName);
+		pet.setType(petType);
+		pet.setBirthDate(petBirthDate);
+		pet.setMicrochip("981020001234567");
+
+		petValidator.validate(pet, errors);
+
+		assertFalse(errors.hasErrors());
+	}
+
+	@Test
+	void validateWithBlankMicrochip() {
+		petType.setName(petTypeName);
+		pet.setName(petName);
+		pet.setType(petType);
+		pet.setBirthDate(petBirthDate);
+		pet.setMicrochip("  ");
+
+		petValidator.validate(pet, errors);
+
+		assertFalse(errors.hasErrors());
+	}
+
 	@Nested
 	class ValidateHasErrors {
 
@@ -120,6 +146,32 @@ class PetValidatorTests {
 			petValidator.validate(pet, errors);
 
 			assertTrue(errors.hasFieldErrors("birthDate"));
+		}
+
+		@Test
+		void validateWithShortMicrochip() {
+			petType.setName(petTypeName);
+			pet.setName(petName);
+			pet.setType(petType);
+			pet.setBirthDate(petBirthDate);
+			pet.setMicrochip("12345");
+
+			petValidator.validate(pet, errors);
+
+			assertTrue(errors.hasFieldErrors("microchip"));
+		}
+
+		@Test
+		void validateWithNonDigitMicrochip() {
+			petType.setName(petTypeName);
+			pet.setName(petName);
+			pet.setType(petType);
+			pet.setBirthDate(petBirthDate);
+			pet.setMicrochip("98102000123456X");
+
+			petValidator.validate(pet, errors);
+
+			assertTrue(errors.hasFieldErrors("microchip"));
 		}
 
 		@Test
