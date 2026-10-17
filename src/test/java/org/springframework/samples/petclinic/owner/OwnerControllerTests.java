@@ -118,7 +118,18 @@ class OwnerControllerTests {
 				.param("lastName", "Bloggs")
 				.param("address", "123 Caramel Street")
 				.param("city", "London")
-				.param("telephone", "1316761638"))
+				.param("telephone", "notaphonenumber"))
+			.andExpect(status().is3xxRedirection());
+	}
+
+	@Test
+	void processCreationFormSuccessWithInternationalTelephone() throws Exception {
+		mockMvc
+			.perform(post("/owners/new").param("firstName", "Joe")
+				.param("lastName", "Bloggs")
+				.param("address", "123 Caramel Street")
+				.param("city", "London")
+				.param("telephone", "+491701234567"))
 			.andExpect(status().is3xxRedirection());
 	}
 
