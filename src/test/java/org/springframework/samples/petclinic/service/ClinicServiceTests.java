@@ -88,16 +88,16 @@ class ClinicServiceTests {
 
 	@Test
 	void shouldFindOwnersByLastName() {
-		Page<Owner> owners = this.owners.findByLastNameStartingWithIgnoreCase("Davis", pageable);
+		Page<Owner> owners = this.owners.findByLastNameContainingIgnoreCase("Davis", pageable);
 		assertThat(owners).hasSize(2);
 
-		owners = this.owners.findByLastNameStartingWithIgnoreCase("Daviss", pageable);
+		owners = this.owners.findByLastNameContainingIgnoreCase("Daviss", pageable);
 		assertThat(owners).isEmpty();
 	}
 
 	@Test
 	void shouldFindOwnersByLastNameIgnoringCase() {
-		Page<Owner> owners = this.owners.findByLastNameStartingWithIgnoreCase("davis", pageable);
+		Page<Owner> owners = this.owners.findByLastNameContainingIgnoreCase("davis", pageable);
 		assertThat(owners).hasSize(2);
 		assertThat(owners).extracting(Owner::getLastName).containsOnly("Davis");
 	}
@@ -116,7 +116,7 @@ class ClinicServiceTests {
 	@Test
 	@Transactional
 	void shouldInsertOwner() {
-		Page<Owner> owners = this.owners.findByLastNameStartingWithIgnoreCase("Schultz", pageable);
+		Page<Owner> owners = this.owners.findByLastNameContainingIgnoreCase("Schultz", pageable);
 		int found = (int) owners.getTotalElements();
 
 		Owner owner = new Owner();
@@ -128,7 +128,7 @@ class ClinicServiceTests {
 		this.owners.save(owner);
 		assertThat(owner.getId()).isNotZero();
 
-		owners = this.owners.findByLastNameStartingWithIgnoreCase("Schultz", pageable);
+		owners = this.owners.findByLastNameContainingIgnoreCase("Schultz", pageable);
 		assertThat(owners.getTotalElements()).isEqualTo(found + 1);
 	}
 
