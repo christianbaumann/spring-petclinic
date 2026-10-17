@@ -46,6 +46,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -167,6 +168,21 @@ class OwnerControllerTests {
 		ArgumentCaptor<Owner> saved = ArgumentCaptor.forClass(Owner.class);
 		verify(this.owners).save(saved.capture());
 		assertThat(saved.getValue().getCity()).isEqualTo("New York");
+	}
+
+	@Test
+	void processCreationFormRejectsWhitespaceOnlyCity() throws Exception {
+		mockMvc
+			.perform(post("/owners/new").param("firstName", "Joe")
+				.param("lastName", "Bloggs")
+				.param("address", "123 Caramel Street")
+				.param("city", "   ")
+				.param("telephone", "1316761638"))
+			.andExpect(status().isOk())
+			.andExpect(model().attributeHasFieldErrors("owner", "city"))
+			.andExpect(view().name("owners/createOrUpdateOwnerForm"));
+
+		verify(this.owners, never()).save(any(Owner.class));
 	}
 
 	@Test
