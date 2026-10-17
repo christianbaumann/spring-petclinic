@@ -14,28 +14,21 @@
     <span th:text="${error}"></span>
   </div>
 
-  <table class="table table-striped" th:object="${owner}">
-    <tr>
-      <th th:text="#{name}">Name</th>
-      <td><b th:text="*{firstName + ' ' + lastName}"></b></td>
-    </tr>
-    <tr>
-      <th th:text="#{address}">Address</th>
-      <td th:text="*{address}"></td>
-    </tr>
-    <tr>
-      <th th:text="#{city}">City</th>
-      <td th:text="*{city}"></td>
-    </tr>
-    <tr>
-      <th th:text="#{telephone}">Telephone</th>
-      <td th:text="*{telephone}"></td>
-    </tr>
-  </table>
+  <h3 th:text="#{contactInfo}">Contact information</h3>
+  <dl class="row" th:object="${owner}">
+    <dt class="col-12 col-sm-3" th:text="#{name}">Name</dt>
+    <dd class="col-12 col-sm-9"><b th:text="*{firstName + ' ' + lastName}"></b></dd>
+    <dt class="col-12 col-sm-3" th:text="#{address}">Address</dt>
+    <dd class="col-12 col-sm-9" th:text="*{address}"></dd>
+    <dt class="col-12 col-sm-3" th:text="#{city}">City</dt>
+    <dd class="col-12 col-sm-9" th:text="*{city}"></dd>
+    <dt class="col-12 col-sm-3" th:text="#{telephone}">Telephone</dt>
+    <dd class="col-12 col-sm-9" th:text="*{telephone}"></dd>
+  </dl>
 
-  <a th:href="@{__${owner.id}__/edit}" class="btn btn-primary" th:text="#{editOwner}">Edit
+  <a th:href="@{__${owner.id}__/edit}" class="btn btn-primary mb-2" th:text="#{editOwner}">Edit
     Owner</a>
-  <a th:href="@{__${owner.id}__/pets/new}" class="btn btn-primary" th:text="#{addNewPet}">Add
+  <a th:href="@{__${owner.id}__/pets/new}" class="btn btn-primary mb-2" th:text="#{addNewPet}">Add
     New Pet</a>
 
   <br />
