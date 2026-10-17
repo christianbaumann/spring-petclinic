@@ -55,81 +55,81 @@ class OwnerTests {
 		assertEquals(1, owner.getPets().size());
 	}
 
-    private Validator createValidator() {
-        LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
-        localValidatorFactoryBean.afterPropertiesSet();
-        return localValidatorFactoryBean;
-    }
+	private Validator createValidator() {
+		LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
+		localValidatorFactoryBean.afterPropertiesSet();
+		return localValidatorFactoryBean;
+	}
 
-    private Owner validOwner() {
-        Owner owner = new Owner();
-        owner.setFirstName("George");
-        owner.setLastName("Franklin");
-        owner.setAddress("110 W. Liberty St.");
-        owner.setCity("Madison");
-        owner.setTelephone("6085551023");
-        return owner;
-    }
+	private Owner validOwner() {
+		Owner owner = new Owner();
+		owner.setFirstName("George");
+		owner.setLastName("Franklin");
+		owner.setAddress("110 W. Liberty St.");
+		owner.setCity("Madison");
+		owner.setTelephone("6085551023");
+		return owner;
+	}
 
-    private Set<ConstraintViolation<Owner>> validate(Owner owner) {
-        return createValidator().validate(owner);
-    }
+	private Set<ConstraintViolation<Owner>> validate(Owner owner) {
+		return createValidator().validate(owner);
+	}
 
-    @Test
-    void shouldValidateAddressAtMaxLength() {
-        Owner owner = validOwner();
-        owner.setAddress("a".repeat(255));
+	@Test
+	void shouldValidateAddressAtMaxLength() {
+		Owner owner = validOwner();
+		owner.setAddress("a".repeat(255));
 
-        assertThat(validate(owner)).isEmpty();
-    }
+		assertThat(validate(owner)).isEmpty();
+	}
 
-    @Test
-    void shouldValidateAddressJustBelowMaxLength() {
-        Owner owner = validOwner();
-        owner.setAddress("a".repeat(254));
+	@Test
+	void shouldValidateAddressJustBelowMaxLength() {
+		Owner owner = validOwner();
+		owner.setAddress("a".repeat(254));
 
-        assertThat(validate(owner)).isEmpty();
-    }
+		assertThat(validate(owner)).isEmpty();
+	}
 
-    @Test
-    void shouldNotValidateAddressAboveMaxLength() {
-        Owner owner = validOwner();
-        owner.setAddress("a".repeat(256));
+	@Test
+	void shouldNotValidateAddressAboveMaxLength() {
+		Owner owner = validOwner();
+		owner.setAddress("a".repeat(256));
 
-        Set<ConstraintViolation<Owner>> violations = validate(owner);
+		Set<ConstraintViolation<Owner>> violations = validate(owner);
 
-        assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getPropertyPath()).hasToString("address");
-    }
+		assertThat(violations).hasSize(1);
+		assertThat(violations.iterator().next().getPropertyPath()).hasToString("address");
+	}
 
-    @Test
-    void shouldValidateCityAtMaxLength() {
-        Owner owner = validOwner();
-        owner.setCity("a".repeat(80));
+	@Test
+	void shouldValidateCityAtMaxLength() {
+		Owner owner = validOwner();
+		owner.setCity("a".repeat(80));
 
-        assertThat(validate(owner)).isEmpty();
-    }
+		assertThat(validate(owner)).isEmpty();
+	}
 
-    @Test
-    void shouldNotValidateCityAboveMaxLength() {
-        Owner owner = validOwner();
-        owner.setCity("a".repeat(81));
+	@Test
+	void shouldNotValidateCityAboveMaxLength() {
+		Owner owner = validOwner();
+		owner.setCity("a".repeat(81));
 
-        Set<ConstraintViolation<Owner>> violations = validate(owner);
+		Set<ConstraintViolation<Owner>> violations = validate(owner);
 
-        assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getPropertyPath()).hasToString("city");
-    }
+		assertThat(violations).hasSize(1);
+		assertThat(violations.iterator().next().getPropertyPath()).hasToString("city");
+	}
 
-    @Test
-    void shouldNotValidateBlankAddress() {
-        Owner owner = validOwner();
-        owner.setAddress("");
+	@Test
+	void shouldNotValidateBlankAddress() {
+		Owner owner = validOwner();
+		owner.setAddress("");
 
-        Set<ConstraintViolation<Owner>> violations = validate(owner);
+		Set<ConstraintViolation<Owner>> violations = validate(owner);
 
-        assertThat(violations).hasSize(1);
-        assertThat(violations.iterator().next().getPropertyPath()).hasToString("address");
-    }
+		assertThat(violations).hasSize(1);
+		assertThat(violations.iterator().next().getPropertyPath()).hasToString("address");
+	}
 
 }
