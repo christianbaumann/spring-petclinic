@@ -96,6 +96,13 @@ class ClinicServiceTests {
 	}
 
 	@Test
+	void shouldFindOwnersByLastNameIgnoringCase() {
+		Page<Owner> owners = this.owners.findByLastNameStartingWithIgnoreCase("davis", pageable);
+		assertThat(owners).hasSize(2);
+		assertThat(owners).extracting(Owner::getLastName).containsOnly("Davis");
+	}
+
+	@Test
 	void shouldFindSingleOwnerWithPet() {
 		Optional<Owner> optionalOwner = this.owners.findById(1);
 		assertThat(optionalOwner).isPresent();
