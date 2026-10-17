@@ -52,3 +52,6 @@ CREATE TABLE IF NOT EXISTS visits (
   description TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_visits_pet_id ON visits (pet_id);
+
+-- prod pets table predates the microchip column
+ALTER TABLE pets ADD COLUMN microchip VARCHAR(15);
