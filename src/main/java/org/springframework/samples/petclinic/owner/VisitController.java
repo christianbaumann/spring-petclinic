@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.owner;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
@@ -99,6 +100,11 @@ class VisitController {
 			BindingResult result, RedirectAttributes redirectAttributes) {
 		if (visit.getDate() != null && !visit.getDate().isAfter(LocalDate.now())) {
 			result.rejectValue("date", "typeMismatch.visitDate");
+		}
+
+		// TODO: public holidays
+		if (visit.getDate() != null && visit.getDate().getDayOfWeek() == DayOfWeek.SUNDAY) {
+			result.rejectValue("date", "visitDate.closedOnSunday", "The clinic is closed on Sundays");
 		}
 
 		if (result.hasErrors()) {
