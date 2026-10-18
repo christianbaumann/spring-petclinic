@@ -31,8 +31,11 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.aot.DisabledInAotMode;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Optional;
 
 /**
@@ -104,6 +107,33 @@ class VisitControllerTests {
 			.andExpect(model().attributeHasFieldErrorCode("visit", "date", "typeMismatch.visitDate"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("pets/createOrUpdateVisitForm"));
+	}
+
+	@Test
+	void acceptsVisitOnMonday() throws Exception {
+		mockMvc.perform(postVisitOn(nextAfterToday(DayOfWeek.MONDAY)))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:/owners/{ownerId}"));
+	}
+
+	@Test
+	void rejectsVisitOnSunday() throws Exception {
+		mockMvc.perform(postVisitOn(nextAfterToday(DayOfWeek.SUNDAY)))
+			.andExpect(model().attributeHasFieldErrorCode("visit", "date", "visitDate.closedOnSunday"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("pets/createOrUpdateVisitForm"));
+	}
+
+	@Test
+	void acceptsVisitOnSaturday() throws Exception {
+	}
+
+	private MockHttpServletRequestBuilder postVisitOn(LocalDate date) {
+		return post("/owners/{ownerId}/pets/{petId}/visits/new", TEST_OWNER_ID, TEST_PET_ID).param("name", "George").param("date", date.toString()).param("description", "Visit Description");
+	}
+
+	private LocalDate nextAfterToday(DayOfWeek day) {
+		return LocalDate.now().with(TemporalAdjusters.next(day));
 	}
 
 }
