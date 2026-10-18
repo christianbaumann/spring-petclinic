@@ -129,7 +129,9 @@ class VisitControllerTests {
 	}
 
 	private MockHttpServletRequestBuilder postVisitOn(LocalDate date) {
-		return post("/owners/{ownerId}/pets/{petId}/visits/new", TEST_OWNER_ID, TEST_PET_ID).param("name", "George").param("date", date.toString()).param("description", "Visit Description");
+		return post("/owners/{ownerId}/pets/{petId}/visits/new", TEST_OWNER_ID, TEST_PET_ID).param("name", "George")
+			.param("date", date.toString())
+			.param("description", "Visit Description");
 	}
 
 	private LocalDate nextAfterToday(DayOfWeek day) {
