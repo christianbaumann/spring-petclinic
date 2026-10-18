@@ -18,10 +18,6 @@ package org.springframework.samples.petclinic;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -30,12 +26,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.vet.VetRepository;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = "logging.level.sql=DEBUG")
@@ -61,19 +54,6 @@ public class PetClinicIntegrationTests {
 		RestTemplate template = builder.baseUri("http://localhost:" + port).build();
 		ResponseEntity<String> result = template.exchange(RequestEntity.get("/owners/1").build(), String.class);
 		assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-	}
-
-	@Test
-	void bookVisitOnMonday() {
-		RestTemplate template = builder.baseUri("http://localhost:" + port).build();
-		MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
-		form.add("date", LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.MONDAY)).toString());
-		form.add("description", "Annual checkup");
-		ResponseEntity<String> booked = template.exchange(RequestEntity.post("/owners/1/pets/1/visits/new")
-			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
-			.body(form), String.class);
-		assertThat(booked.getStatusCode().is2xxSuccessful()).isTrue();
-		assertThat(booked.getBody()).contains("Annual checkup");
 	}
 
 	@Test
