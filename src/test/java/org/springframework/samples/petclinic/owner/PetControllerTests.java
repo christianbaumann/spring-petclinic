@@ -104,31 +104,8 @@ class PetControllerTests {
 			.andExpect(view().name("redirect:/owners/{ownerId}"));
 	}
 
-	@Test
-	void processCreationFormWithMicrochipSuccess() throws Exception {
-		mockMvc
-			.perform(post("/owners/{ownerId}/pets/new", TEST_OWNER_ID).param("name", "Betty")
-				.param("type", "hamster")
-				.param("birthDate", "2015-02-12")
-				.param("microchip", "981020001234567"))
-			.andExpect(status().is3xxRedirection())
-			.andExpect(view().name("redirect:/owners/{ownerId}"));
-	}
-
 	@Nested
 	class ProcessCreationFormHasErrors {
-
-		@Test
-		void processCreationFormWithInvalidMicrochip() throws Exception {
-			mockMvc
-				.perform(post("/owners/{ownerId}/pets/new", TEST_OWNER_ID).param("name", "Betty")
-					.param("type", "hamster")
-					.param("birthDate", "2015-02-12")
-					.param("microchip", "12345"))
-				.andExpect(model().attributeHasFieldErrorCode("pet", "microchip", "microchip.invalid"))
-				.andExpect(status().isOk())
-				.andExpect(view().name("pets/createOrUpdatePetForm"));
-		}
 
 		@Test
 		void processCreationFormWithBlankName() throws Exception {

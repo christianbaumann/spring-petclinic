@@ -35,8 +35,6 @@ public class PetValidator implements Validator {
 
 	private static final int MAX_NAME_LENGTH = 30;
 
-	private static final String MICROCHIP_PATTERN = "\\d{15}";
-
 	@Override
 	public void validate(Object obj, Errors errors) {
 		Pet pet = (Pet) obj;
@@ -57,12 +55,6 @@ public class PetValidator implements Validator {
 		// birth date validation
 		if (pet.getBirthDate() == null) {
 			errors.rejectValue("birthDate", REQUIRED, REQUIRED);
-		}
-
-		// microchip validation (optional)
-		String microchip = pet.getMicrochip();
-		if (microchip != null && !microchip.matches(MICROCHIP_PATTERN)) {
-			errors.rejectValue("microchip", "microchip.invalid", "Microchip number must be 15 digits");
 		}
 	}
 
