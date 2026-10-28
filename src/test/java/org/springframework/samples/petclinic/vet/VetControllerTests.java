@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.aot.DisabledInAotMode;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -32,7 +33,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -87,6 +90,14 @@ class VetControllerTests {
 			.andExpect(model().attributeExists("listVets"))
 			.andExpect(view().name("vets/vetList"));
 
+	}
+
+	@Test
+	void showVetListHtmlSortsByLastNameThenFirstName() throws Exception {
+		mockMvc.perform(get("/vets.html?page=1")).andExpect(status().isOk());
+
+		then(this.vets).should()
+			.findAll(argThat((Pageable pageable) -> pageable.getSort().equals(Sort.by("lastName", "firstName"))));
 	}
 
 	@Test
